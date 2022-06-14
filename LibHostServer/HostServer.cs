@@ -68,7 +68,7 @@ namespace LibHostServer
                 .GetAwaiter();
             taskAwaiter.OnCompleted(new Action(() =>
             {
-                Console.WriteLine(taskAwaiter.GetResult());
+                //Console.WriteLine(taskAwaiter.GetResult());
             }));
         }
 

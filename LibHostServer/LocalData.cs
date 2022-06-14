@@ -33,7 +33,7 @@ namespace LibHostServer
                 case ServerRole.standby:
                     break;
                 case ServerRole.input:
-                    Self.Request("/db/set/");
+                    
                     break;
                 case ServerRole.lonely:
                     obj.ServerType = ServerRole.processing;
