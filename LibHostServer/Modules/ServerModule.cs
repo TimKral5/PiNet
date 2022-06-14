@@ -27,7 +27,8 @@ namespace LibHostServer.Modules
                     {
                         _server.data.AddHost(new ServerInfo()
                         {
-                            Address = query[_server.keys[0]]
+                            Address = query[_server.keys[0]],
+                            ServerType = ServerRole.processing
                         });
 
                         status = "200";

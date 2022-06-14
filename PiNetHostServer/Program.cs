@@ -19,9 +19,12 @@ namespace PiNetHostServer
             hostServer.Init();
             ServerModule.Init(hostServer);
             DbModule.Init(hostServer);
-            //hostServer.ConnectToNetwork();
-            wl("Port:");
-            hostServer.RunServer(int.Parse(Console.ReadLine()));
+            if(Console.ReadKey().KeyChar == 'y')
+            {
+                wl("");
+                hostServer.ConnectToNetwork(inp("Node-Address:"), inp("Host-Address:"));
+            }
+            hostServer.RunServer(int.Parse(inp("Port:")));
             
         }
     }

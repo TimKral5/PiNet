@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Kingsoft.Utils.Http;
@@ -21,6 +22,17 @@ namespace LibHostServer
         public LocalData data { get; set; }
         public Dictionary<string, string> dataBase { get; set; }
         public string[] keys = new string[] { "address" };
+
+        public int ProcServerIndex = 0;
+
+        public ServerInfo GetProcServer()
+        {
+            ServerInfo serverInfo = data.ProcessingServers[ProcServerIndex];
+            ProcServerIndex++;
+            if (ProcServerIndex > data.ProcessingServers.Count - 1) 
+                ProcServerIndex = 0;
+            return serverInfo;
+        }
 
         public (bool, ServerInfo) GetHost(string key)
         {
@@ -45,12 +57,19 @@ namespace LibHostServer
             data = new LocalData();
             Server = new HttpServer();
             client.Timeout = 2000;
+            client.ErrorMessage = new Dictionary<string, object> { ["status"] = "timeout" }.json();
             dataBase = new Dictionary<string, string>();
+
         }
 
-        public void ConnectToNetwork()
+        public void ConnectToNetwork(string address, string self)
         {
-            Console.WriteLine(client.TDownloadStringTaskAsync(new Uri("http://kingsoft.dyndns-home.com:19138")).Result);
+            TaskAwaiter<string> taskAwaiter = client.TDownloadStringTaskAsync(new Uri($"http://{address}/server/join?address={self}"))
+                .GetAwaiter();
+            taskAwaiter.OnCompleted(new Action(() =>
+            {
+                Console.WriteLine(taskAwaiter.GetResult());
+            }));
         }
 
         public void RunServer(int port) => Server.RunServer(port);
